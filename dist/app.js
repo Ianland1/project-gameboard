@@ -1,5 +1,5 @@
-import { Game } from './engine.js?v=blue-workbench';
-import { LEVELS, SUBJECTS, QUESTIONS } from './questions.js?v=blue-workbench';
+import { Game } from './engine.js?v=gray-blue';
+import { LEVELS, SUBJECTS, QUESTIONS } from './questions.js?v=gray-blue';
 
 const $ = selector => document.querySelector(selector);
 const storageKey = 'pyra-companion-v1';
