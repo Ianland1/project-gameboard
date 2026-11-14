@@ -1,4 +1,4 @@
-import { QUESTIONS, LEVELS, SUBJECTS } from './questions.js?v=gray-blue-v2';
+import { QUESTIONS, LEVELS, SUBJECTS } from './questions.js?v=charcoal';
 
 export const DIE_SIDES = 4;
 
