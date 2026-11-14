@@ -5,10 +5,10 @@ export const LEVELS = [
   { id: 'college', label: 'College', detail: 'Introductory level', short: 'College' },
 ];
 export const SUBJECTS = [
-  { id: 'math', label: 'Math', icon: 'math', detail: 'Numbers & logic', color: '#c5f36b' },
-  { id: 'english', label: 'English', icon: 'english', detail: 'Words & meaning', color: '#b7a9ff' },
-  { id: 'science', label: 'Science', icon: 'science', detail: 'Explore & discover', color: '#6fd8e4' },
-  { id: 'engineering', label: 'Engineering', icon: 'engineering', detail: 'Build & solve', color: '#f9ae74' },
+  { id: 'math', label: 'Math', icon: 'math', detail: 'Numbers & logic', color: '#79bfff' },
+  { id: 'english', label: 'English', icon: 'english', detail: 'Words & meaning', color: '#b9b7ff' },
+  { id: 'science', label: 'Science', icon: 'science', detail: 'Explore & discover', color: '#64d7e2' },
+  { id: 'engineering', label: 'Engineering', icon: 'engineering', detail: 'Build & solve', color: '#ffc078' },
 ];
 
 // Each row: question, correct answer, three distractors, explanation.
