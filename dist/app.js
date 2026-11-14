@@ -1,4 +1,4 @@
-import { Game } from './engine.js?v=roll-1-4';
+import { Game } from './engine.js?v=pyramid-d4';
 import { LEVELS, SUBJECTS, QUESTIONS } from './questions.js';
 
 const $ = selector => document.querySelector(selector);
@@ -58,7 +58,6 @@ function renderCard() {
   $('#card-container').innerHTML = `<article class="challenge"><div class="challenge-top"><span class="card-tag">${icon(subject.icon)}${esc(level.short)} / ${esc(subject.label)}</span>${game.phase === 'question' ? `<button class="skip-button" data-action="draw" ${rolling ? 'disabled' : ''}>Skip${icon('arrow')}</button>` : `<span class="card-code">${String(number).padStart(2,'0')} / 06</span>`}</div><div class="question-body"><h3 id="question-title" tabindex="-1">${esc(q.prompt)}</h3><div class="answer-options" role="group" aria-label="Answer choices">${options}</div></div>${feedback}<div class="challenge-actions">${actions}</div></article>`;
 }
 
-const faces = {1:[-18,-24],2:[-18,-114],3:[-108,-24],4:[72,-24]};
 function renderDice() {
   $('#roll-button').disabled = rolling || !game.canRoll;
   $('#roll-button span').textContent = rolling ? 'Rolling…' : game.canRoll ? 'Roll the die' : 'Roll locked';
@@ -75,8 +74,9 @@ function renderDice() {
   $('#roll-hint').textContent = game.freeRoll ? 'Free roll is on. No answer needed.' : game.phase === 'correct' ? 'Roll once, then move your real game piece.' : game.phase === 'rolled' ? 'Roll used. Draw another card to unlock the die.' : 'Answer a card correctly, or turn on Free roll below.';
   $('#roll-history').innerHTML = game.history.length ? game.history.map(n => `<span class="history-die">${n}</span>`).join('') : '<span class="history-empty">Your next move awaits</span>';
   if (!rolling) {
-    const [x,y] = faces[game.lastRoll ?? 1];
-    $('#die').style.transform = `rotateX(${x}deg) rotateY(${y}deg)`;
+    const value = game.lastRoll ?? 1;
+    $('#die-value').textContent = value;
+    $('#die-side-value').textContent = value % 4 + 1;
   }
 }
 

@@ -10,7 +10,7 @@ A responsive website for a physical cyber pyramid game. The website provides que
 - Shuffled cards and options, with no repeated cards until the selected deck is exhausted.
 - Answer explanations. By default, one correct answer unlocks one roll.
 - Free roll mode for your own game rules.
-- Animated, cryptographically randomized rolls from 1 to 4 and recent-roll history. Each number is equally likely.
+- Animated D4-style triangular pyramid die with a three-sided base, cryptographically randomized rolls from 1 to 4, and recent-roll history. Each number is equally likely.
 - Session totals and progress saved locally when browser storage is available.
 - Responsive layout, keyboard controls, accessible dialogs, and reduced-motion support.
 
