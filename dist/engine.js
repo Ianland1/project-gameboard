@@ -1,5 +1,7 @@
 import { QUESTIONS, LEVELS, SUBJECTS } from './questions.js';
 
+export const DIE_SIDES = 4;
+
 export function randomInt(max) {
   if (!Number.isInteger(max) || max < 1 || max > 0x100000000) throw new RangeError('Invalid random range');
   const limit = Math.floor(0x100000000 / max) * max;
@@ -73,7 +75,7 @@ export class Game {
   }
   roll() {
     if (!this.canRoll) return null;
-    const value = this.random(6) + 1;
+    const value = this.random(DIE_SIDES) + 1;
     if (this.phase === 'correct') this.phase = 'rolled';
     this.lastRoll = value;
     this.rolls++;
@@ -94,7 +96,7 @@ export class Game {
         if (!Number.isSafeInteger(saved[name]) || saved[name] < 0) throw new Error('Invalid counts');
         game[name] = saved[name];
       }
-      game.history = Array.isArray(saved.history) ? saved.history.filter(n => Number.isInteger(n) && n >= 1 && n <= 6).slice(0, 5) : [];
+      game.history = Array.isArray(saved.history) ? saved.history.filter(n => Number.isInteger(n) && n >= 1 && n <= DIE_SIDES).slice(0, 5) : [];
       game.lastRoll = game.history[0] ?? null;
       for (const level of LEVELS) for (const subject of SUBJECTS) {
         const key = `${level.id}-${subject.id}`;

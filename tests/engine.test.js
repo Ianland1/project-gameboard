@@ -36,7 +36,7 @@ test('a correct answer unlocks exactly one roll', () => {
   assert.equal(game.roll(), null);
   assert.equal(game.answer(card.answer), true);
   assert.equal(game.canRoll, true);
-  assert.equal(game.roll(), 6);
+  assert.equal(game.roll(), 4);
   assert.equal(game.roll(), null);
   assert.equal(game.correct, 1);
   assert.equal(game.rolls, 1);
@@ -88,25 +88,28 @@ test('drawing a new card cannot carry over an earned roll', () => {
 test('free-roll mode works without a card and does not duplicate an earned roll', () => {
   const game = new Game(deterministic);
   game.freeRoll = true;
-  assert.equal(game.roll(), 6);
-  assert.equal(game.roll(), 6);
+  assert.equal(game.roll(), 4);
+  assert.equal(game.roll(), 4);
   const card = game.draw();
   game.answer(card.answer);
-  assert.equal(game.roll(), 6);
+  assert.equal(game.roll(), 4);
   game.freeRoll = false;
   assert.equal(game.roll(), null);
   assert.equal(game.rolls, 3);
 });
 
-test('all six die outcomes are mapped to values from 1 through 6', () => {
-  for (let n=0;n<6;n++) {
+test('all four die outcomes are mapped to values from 1 through 4', () => {
+  for (let n=0;n<4;n++) {
     const game = new Game(max => Math.min(n,max-1));
     game.freeRoll = true;
     assert.equal(game.roll(), n+1);
   }
   for (let i=0;i<500;i++) {
-    const value = randomInt(6);
-    assert.ok(value >= 0 && value < 6 && Number.isInteger(value));
+    const value = randomInt(4);
+    assert.ok(value >= 0 && value < 4 && Number.isInteger(value));
+    const game = new Game();
+    game.freeRoll = true;
+    assert.ok([1, 2, 3, 4].includes(game.roll()));
   }
 });
 
@@ -144,6 +147,25 @@ test('roll history keeps only the five most recent values', () => {
   for(let i=0;i<8;i++) game.roll();
   assert.equal(game.history.length,5);
   assert.equal(game.rolls,8);
+});
+
+test('saved sessions discard old 5 and 6 rolls without losing progress or unlocking an extra roll', () => {
+  const game = new Game(deterministic);
+  const q = game.draw();
+  game.answer(q.answer);
+  game.roll();
+  const saved = game.snapshot();
+  saved.history = [6, 4, 5, 2, 1];
+  saved.lastRoll = 6;
+  const restored = Game.restore(saved, deterministic);
+  assert.deepEqual(restored.history, [4, 2, 1]);
+  assert.equal(restored.lastRoll, 4);
+  assert.equal(restored.correct, 1);
+  assert.equal(restored.drawn, 1);
+  assert.equal(restored.rolls, 1);
+  assert.equal(restored.roll(), null);
+  saved.history = [6, 5];
+  assert.equal(Game.restore(saved).lastRoll, null);
 });
 
 test('malformed saved state recovers to a playable default', () => {

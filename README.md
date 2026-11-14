@@ -1,6 +1,6 @@
 # PYRA — Game Companion
 
-A responsive website for a physical cyber pyramid game. The website provides question cards and a six-sided die; players move their real pieces on their existing game board.
+A responsive website for a physical cyber pyramid game. The website provides question cards and a die that rolls from 1 to 4; players move their real pieces on their existing game board.
 
 ## Included
 
@@ -10,7 +10,7 @@ A responsive website for a physical cyber pyramid game. The website provides que
 - Shuffled cards and options, with no repeated cards until the selected deck is exhausted.
 - Answer explanations. By default, one correct answer unlocks one roll.
 - Free roll mode for your own game rules.
-- Animated, cryptographically randomized six-sided dice and recent-roll history.
+- Animated, cryptographically randomized rolls from 1 to 4 and recent-roll history. Each number is equally likely.
 - Session totals and progress saved locally when browser storage is available.
 - Responsive layout, keyboard controls, accessible dialogs, and reduced-motion support.
 
