@@ -1,4 +1,4 @@
-# PYRA — Game Companion
+# Game Companion
 
 A responsive website for a physical cyber pyramid game. The website provides question cards and a die that rolls from 1 to 4; players move their real pieces on their existing game board.
 

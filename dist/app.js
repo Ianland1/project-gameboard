@@ -1,4 +1,4 @@
-import { Game } from './engine.js?v=pyramid-d4';
+import { Game } from './engine.js?v=unbranded';
 import { LEVELS, SUBJECTS, QUESTIONS } from './questions.js';
 
 const $ = selector => document.querySelector(selector);
@@ -35,7 +35,7 @@ function renderCard() {
   $('#card-container').style.setProperty('--subject', subject.color);
   const q = game.current;
   if (!q) {
-    $('#card-container').innerHTML = `<article class="challenge empty-card"><div class="empty-symbol">${icon('pyramid')}</div><h3>Ready for a challenge?</h3><p>Your ${esc(level.short.toLowerCase())} ${esc(subject.label.toLowerCase())} deck is ready. Draw a card and see what you know.</p><button class="button button-primary" data-action="draw" ${rolling ? 'disabled' : ''}>Draw a card${icon('arrow')}</button><span class="card-small-note">NO TIMER. TAKE A MOMENT TO THINK.</span></article>`;
+    $('#card-container').innerHTML = `<article class="challenge empty-card"><div class="empty-symbol">${icon('dice')}</div><h3>Ready for a challenge?</h3><p>Your ${esc(level.short.toLowerCase())} ${esc(subject.label.toLowerCase())} deck is ready. Draw a card and see what you know.</p><button class="button button-primary" data-action="draw" ${rolling ? 'disabled' : ''}>Draw a card${icon('arrow')}</button><span class="card-small-note">NO TIMER. TAKE A MOMENT TO THINK.</span></article>`;
     return;
   }
   const answered = game.phase !== 'question';
