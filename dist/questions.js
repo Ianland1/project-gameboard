@@ -1,7 +1,7 @@
-import mathCourses from './courses/math.js?v=courses-v1';
-import englishCourses from './courses/english.js?v=courses-v1';
-import scienceCourses from './courses/science.js?v=courses-v1';
-import engineeringCourses from './courses/engineering.js?v=courses-v1';
+import mathCourses from './courses/math.js?v=stem-v1';
+import computerScienceCourses from './courses/computer-science.js?v=stem-v1';
+import scienceCourses from './courses/science.js?v=stem-v1';
+import engineeringCourses from './courses/engineering.js?v=stem-v1';
 
 export const LEVELS = [
   { id: 'elementary', label: 'Elementary', detail: 'Grades 1–5', short: 'Elementary' },
@@ -11,7 +11,7 @@ export const LEVELS = [
 ];
 export const SUBJECTS = [
   { id: 'math', label: 'Math', icon: 'math', detail: 'Numbers & logic', color: '#79aef2' },
-  { id: 'english', label: 'English', icon: 'english', detail: 'Words & meaning', color: '#79aef2' },
+  { id: 'computer-science', label: 'Computer Science', icon: 'computer-science', detail: 'Code & logic', color: '#79aef2' },
   { id: 'science', label: 'Science', icon: 'science', detail: 'Explore & discover', color: '#79aef2' },
   { id: 'engineering', label: 'Engineering', icon: 'engineering', detail: 'Build & solve', color: '#79aef2' },
 ];
@@ -27,14 +27,6 @@ const BANK = {
       ['What number comes next: 5, 10, 15, 20, …?', '25', '21', '24', '30', 'The pattern adds 5 each time.'],
       ['You have 24 blocks and share them equally among 3 people. How many does each person get?', '8', '6', '9', '12', '24 divided by 3 equals 8.'],
       ['Which shape has exactly 3 sides?', 'Triangle', 'Square', 'Pentagon', 'Hexagon', 'A triangle has three sides and three corners.'],
-    ],
-    english: [
-      ['In “The bridge is tall,” which word is a noun?', 'Bridge', 'The', 'Is', 'Tall', 'A noun names a person, place, thing, or idea. The bridge is the thing this sentence describes.'],
-      ['Which word means the opposite of “begin”?', 'Finish', 'Start', 'Open', 'Create', 'To finish is to reach the end; to begin is to start.'],
-      ['Which sentence uses a capital letter correctly?', 'We visited Mars in our story.', 'we visited Mars in our story.', 'We visited mars in our story.', 'We visited Mars in Our story.', 'Capitalize the first word of a sentence and proper nouns such as Mars.'],
-      ['Which word rhymes with “light”?', 'Night', 'Late', 'Lift', 'Little', 'Light and night share the same ending sound.'],
-      ['Which punctuation mark belongs at the end of “Where is the robot”?', 'Question mark (?)', 'Period (.)', 'Comma (,)', 'Colon (:)', 'A direct question ends with a question mark.'],
-      ['Which word describes how something looks?', 'Shiny', 'Run', 'Under', 'Because', 'Shiny is an adjective that describes an appearance.'],
     ],
     science: [
       ['What do plants take in through their roots?', 'Water', 'Sunlight', 'Sound', 'Plastic', 'Roots absorb water and dissolved minerals from the soil.'],
@@ -62,14 +54,6 @@ const BANK = {
       ['What is the probability of rolling a 6 on a fair six-sided die?', '1/6', '1/2', '1/3', '5/6', 'One of the six equally likely outcomes is a 6.'],
       ['What is −4 + 9?', '5', '−5', '13', '−13', 'Start at −4 and move nine units to the right to reach 5.'],
     ],
-    english: [
-      ['Which sentence contains a simile?', 'The robot moved like a sleepy turtle.', 'The robot moved slowly.', 'The robot stopped.', 'The robot needs a battery.', 'A simile compares things using “like” or “as.”'],
-      ['In “The curious engineer examined the circuit,” which word is an adjective?', 'Curious', 'Engineer', 'Examined', 'Circuit', 'Curious describes the engineer.'],
-      ['What is the main purpose of a persuasive essay?', 'To convince a reader of a position', 'To list words alphabetically', 'To avoid taking a position', 'To provide only stage directions', 'Persuasive writing uses reasons and evidence to support a position.'],
-      ['Which sentence uses “their” correctly?', 'They tested their design.', 'Their testing a design.', 'Put the design over their.', 'Their is a design on the desk.', 'Their shows possession: the design belongs to them.'],
-      ['What is a synonym for “precise”?', 'Exact', 'Careless', 'Unclear', 'Random', 'Precise means exact or carefully defined.'],
-      ['What does a story’s setting describe?', 'Where and when it happens', 'Only its final sentence', 'The name of the author', 'Only the central conflict', 'Setting includes the place and time of the story.'],
-    ],
     science: [
       ['What is the basic unit of living things?', 'Cell', 'Atom of gold', 'Rock', 'Planet', 'Cells are the basic structural and functional units of life.'],
       ['Which process turns liquid water into water vapor?', 'Evaporation', 'Freezing', 'Condensation', 'Melting', 'During evaporation, liquid water changes into a gas.'],
@@ -95,14 +79,6 @@ const BANK = {
       ['What is sin(30°)?', '1/2', '1', '0', '√3/2', 'In a 30–60–90 triangle, the side opposite 30° is half the hypotenuse.'],
       ['Simplify 2³ × 2².', '32', '16', '64', '12', 'Add the exponents for the same base: 2⁵ = 32.'],
       ['A fair coin is flipped twice. What is the probability of two heads?', '1/4', '1/2', '3/4', '1/8', 'The independent probabilities multiply: 1/2 × 1/2 = 1/4.'],
-    ],
-    english: [
-      ['Which sentence uses a semicolon correctly?', 'The test ended; the team recorded the results.', 'The test; ended early.', 'The team recorded; the results.', 'Because; the test ended.', 'A semicolon can join two closely related independent clauses.'],
-      ['What is dramatic irony?', 'The audience knows something a character does not', 'An object makes a loud noise', 'Every character agrees', 'The author repeats a rhyme', 'Dramatic irony depends on a difference between the audience’s knowledge and a character’s.'],
-      ['Which appeal relies primarily on evidence and reasoning?', 'Logos', 'Pathos', 'Rhyme', 'Onomatopoeia', 'Logos appeals to logic; pathos appeals to emotion.'],
-      ['Which statement is a metaphor?', 'The laboratory was a beehive of activity.', 'The laboratory was very busy.', 'The laboratory has six tables.', 'The laboratory opens at nine.', 'A metaphor directly describes one thing as another to suggest a comparison.'],
-      ['What is the role of a thesis statement in an argumentative essay?', 'To state the central claim', 'To list every source in full', 'To replace all evidence', 'To identify the page number', 'The thesis states the main claim that the essay develops and supports.'],
-      ['Which revision removes unnecessary wording from “due to the fact that”?', 'Because', 'Nevertheless', 'In addition', 'For example', 'Because communicates the same cause-and-effect relationship more directly.'],
     ],
     science: [
       ['What is the SI unit of force?', 'Newton', 'Joule', 'Watt', 'Volt', 'One newton is the force needed to accelerate 1 kg by 1 m/s².'],
@@ -130,14 +106,6 @@ const BANK = {
       ['What is ln(e²)?', '2', 'e', '1', 'e²', 'The natural logarithm and the exponential function with base e are inverses.'],
       ['What is the dot product of (1, 2) and (3, 4)?', '11', '10', '7', '−5', 'Multiply corresponding components and add: 1(3) + 2(4) = 11.'],
     ],
-    english: [
-      ['Which is a primary source for a study of an inventor’s personal experiences?', 'The inventor’s original diary', 'A modern textbook summary', 'A review of a biography', 'An encyclopedia overview', 'A diary is a firsthand record from the person being studied.'],
-      ['What is a counterargument?', 'A reasoned challenge to a claim', 'A repeated thesis with no changes', 'A list of page numbers', 'A quotation with no context', 'A counterargument presents an opposing position that a writer can evaluate and address.'],
-      ['Which statement confuses correlation with causation?', 'Two trends rose together, so one must have caused the other.', 'The variables changed together.', 'We need more evidence to identify a cause.', 'A controlled study may help explain the relationship.', 'A correlation alone does not establish which variable, if either, caused the other.'],
-      ['What should you do when paraphrasing a source in an academic essay?', 'Use your own wording and cite the source', 'Change one word and omit the citation', 'Keep the exact wording without quotation marks', 'Present the idea as your original discovery', 'A paraphrase changes the wording and structure, but the source of the idea still needs credit.'],
-      ['What makes a thesis arguable?', 'A reasonable reader could disagree with it', 'It states only an undisputed date', 'It contains no specific claim', 'It is always phrased as a question', 'An arguable thesis takes a position that can be supported and challenged with reasons.'],
-      ['Which fallacy attacks a person instead of addressing their argument?', 'Ad hominem', 'Valid deduction', 'Statistical sampling', 'Definition by example', 'An ad hominem attack targets the person rather than the substance of their claim.'],
-    ],
     science: [
       ['What is the SI unit of electrical capacitance?', 'Farad', 'Tesla', 'Henry', 'Ohm', 'Capacitance is measured in farads, equivalent to coulombs per volt.'],
       ['Which quantity is conserved in an isolated system during a collision?', 'Total linear momentum', 'Each object’s speed', 'Each object’s kinetic energy', 'Each object’s direction', 'With no net external force, total linear momentum remains constant.'],
@@ -164,31 +132,27 @@ const BASE_QUESTIONS = Object.entries(BANK).flatMap(([level, subjects]) =>
   }))),
 );
 
-const COURSE_BANK = { math: mathCourses, english: englishCourses, science: scienceCourses, engineering: engineeringCourses };
+const COURSE_BANK = { math: mathCourses, 'computer-science': computerScienceCourses, science: scienceCourses, engineering: engineeringCourses };
 
 // Keep existing question IDs stable so saved cards survive the expanded catalog.
 const LEGACY_COURSES = {
   elementary: {
     math: ['arithmetic', 'geometry', 'fractions', 'arithmetic', 'arithmetic', 'geometry'],
-    english: ['grammar', 'vocabulary', 'grammar', 'vocabulary', 'grammar', 'grammar'],
     science: ['life-science', 'physical-science', 'physical-science', 'life-science', 'physical-science', 'earth-space'],
     engineering: ['simple-machines', 'design', 'design', 'structures', 'design', 'simple-machines'],
   },
   middle: {
     math: ['pre-algebra', 'pre-algebra', 'geometry', 'statistics', 'statistics', 'pre-algebra'],
-    english: ['literature', 'grammar', 'writing', 'grammar', 'vocabulary', 'literature'],
     science: ['biology', 'earth-space', 'chemistry', 'physics', 'earth-space', 'physics'],
     engineering: ['mechanics', 'design', 'design', 'circuits', 'design', 'design'],
   },
   high: {
     math: ['algebra', 'algebra', 'geometry', 'precalculus', 'algebra', 'statistics'],
-    english: ['composition', 'literature', 'rhetoric', 'literature', 'composition', 'composition'],
     science: ['physics', 'physics', 'chemistry', 'chemistry', 'biology', 'physics'],
     engineering: ['electrical', 'civil', 'civil', 'mechanical', 'mechanical', 'electrical'],
   },
   college: {
     math: ['calculus', 'calculus', 'linear-algebra', 'statistics', 'calculus', 'linear-algebra'],
-    english: ['composition', 'rhetoric', 'rhetoric', 'composition', 'composition', 'rhetoric'],
     science: ['physics', 'physics', 'chemistry', 'chemistry', 'chemistry', 'physics'],
     engineering: ['civil', 'mechanical', 'mechanical', 'electrical', 'civil', 'mechanical'],
   },

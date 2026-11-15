@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#25272b">
-  <meta name="description" content="Pick a question. Test your knowledge. Roll your next move. A card and dice companion for your physical cyber pyramid game.">
-  <title>Game Companion</title>
+  <meta name="description" content="Practice math, computer science, science, and engineering with grade-appropriate question cards and a pyramid die for your physical game board.">
+  <title>STEM Practice — Game Companion</title>
   <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="./styles.css?v=courses-v1">
-  <script type="module" src="./app.js?v=courses-v1"></script>
+  <link rel="stylesheet" href="./styles.css?v=stem-v1">
+  <script type="module" src="./app.js?v=stem-v1"></script>
 </head>
 <body>
 <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
   <symbol id="i-math" viewBox="0 0 24 24"><path d="M4 7h6M7 4v6m7-5 6 6m0-6-6 6M4 17h6m4-2h6m-6 4h6"/></symbol>
-  <symbol id="i-english" viewBox="0 0 24 24"><path d="M12 5c-3-2-7-2-10-1v15c3-1 7-1 10 1m0-15c3-2 7-2 10-1v15c-3-1-7-1-10 1V5Z"/></symbol>
+  <symbol id="i-computer-science" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="15" rx="2"/><path d="M8 21h8m-4-3v3M7 7l3 3-3 3m6 0h4"/></symbol>
   <symbol id="i-science" viewBox="0 0 24 24"><path d="M9 3h6m-5 0v6l-6 10a1 1 0 0 0 1 2h14a1 1 0 0 0 1-2L14 9V3M7 15h10"/><path d="M10 17h.01m4 2h.01"/></symbol>
   <symbol id="i-engineering" viewBox="0 0 24 24"><path d="m12 2 10 18H2L12 2Zm0 0 2 13 8 5M2 20l12-5"/></symbol>
   <symbol id="i-dice" viewBox="0 0 24 24"><path d="m12 2 10 14-9 6-11-6L12 2Zm0 0 1 20"/></symbol>
@@ -27,12 +27,12 @@
 <a class="skip-link" href="#play">Skip to game controls</a>
 <div class="site-shell">
   <header class="topbar">
-    <a class="app-home" href="./" aria-label="Game companion home">Game Companion</a>
-    <div class="topbar-right"><span class="connection"><span></span>Made for your game table</span><button class="button button-quiet" id="help-button"><svg class="icon"><use href="#i-info"/></svg>How to play</button></div>
+    <a class="app-home" href="./" aria-label="STEM practice home">STEM Practice</a>
+    <div class="topbar-right"><span class="connection"><span></span>STEM practice for your game table</span><button class="button button-quiet" id="help-button"><svg class="icon"><use href="#i-info"/></svg>How to play</button></div>
   </header>
 
   <section class="hero" aria-labelledby="hero-title">
-    <div class="hero-copy"><p class="eyebrow"><span class="tiny-cross">+</span> YOUR ENGINEERING GAME TOOLKIT</p><h1 id="hero-title">Think. Roll. <span>Rise.</span></h1><p class="hero-description">Pick a challenge. Put your knowledge to work.<br>Then roll the pyramid die and move on your game board.</p><div class="hero-tags"><span>4 grade levels</span><i></i><span>4 subjects</span><i></i><span id="question-total">324 question cards</span></div></div>
+    <div class="hero-copy"><p class="eyebrow"><span class="tiny-cross">+</span> HANDS-ON STEM PRACTICE</p><h1 id="hero-title">Think. Roll. <span>Rise.</span></h1><p class="hero-description">Explore STEM, one challenge at a time.<br>Pick a course, solve a question, and roll your next move.</p><div class="hero-tags"><span>4 grade levels</span><i></i><span>4 STEM subjects</span><i></i><span id="question-total">318 question cards</span></div></div>
     <div class="pyramid-visual" aria-hidden="true">
       <svg viewBox="0 0 420 230" fill="none"><defs><linearGradient id="pyramid-fill" x1="210" y1="10" x2="250" y2="210" gradientUnits="userSpaceOnUse"><stop stop-color="#9ca7b5" stop-opacity=".15"/><stop offset="1" stop-color="#9ca7b5" stop-opacity=".015"/></linearGradient><radialGradient id="glow"><stop stop-color="#9ca7b5" stop-opacity=".08"/><stop offset="1" stop-color="#9ca7b5" stop-opacity="0"/></radialGradient></defs><ellipse cx="220" cy="160" rx="175" ry="70" fill="url(#glow)"/><g stroke="#505762" stroke-width=".65"><path d="m10 189 205-91 196 91-196 39L10 189Z"/><path d="m43 175 173 39 161-40M80 159l139 41 125-41M117 142l106 43 88-42M150 126l75 43 51-42M181 112l46 42 16-43M58 211l172-99M111 222l122-106M163 229l74-107M270 218l-43-103M321 207l-94-92M367 198 226 113"/></g><path d="m215 20 130 158-126 40L94 178 215 20Z" fill="url(#pyramid-fill)" stroke="#79aef2" stroke-width="1.4"/><path d="m215 20 4 198m-125-40 129-31 122 31M154 100l65 47 61-47m-111 19 98 0M130 147h178" stroke="#7c8b9f" stroke-width=".85"/><path d="m215 20 8 127-4 71" stroke="#79aef2" stroke-width="1.5"/><g fill="#79aef2"><circle cx="215" cy="20" r="4"/><circle cx="94" cy="178" r="3"/><circle cx="345" cy="178" r="3"/><circle cx="219" cy="218" r="3"/><circle cx="223" cy="147" r="3"/></g><g stroke="#9aa5b3" stroke-dasharray="3 4"><path d="M215 20h-65l-22 22H64M345 178h27v-66h29M94 178H42v-43"/></g><g fill="#b5bcc6" font-family="monospace" font-size="8" letter-spacing="1.8"><text x="25" y="37">NEXT MOVE</text><text x="300" y="105">KEEP CLIMBING</text><text x="10" y="125">1–4</text></g></svg>
       <span class="visual-caption">PICK A CARD. MAKE YOUR MOVE. <span>↗</span></span>
@@ -82,10 +82,10 @@
   </main>
 
   <section class="session-bar" aria-label="Session statistics"><div class="session-label"><span class="status-dot"></span><span>YOUR SESSION</span></div><div class="session-stats"><span><strong id="stat-drawn">0</strong> cards drawn</span><span><strong id="stat-correct">0</strong> correct answers</span><span><strong id="stat-rolls">0</strong> dice rolls</span></div><button class="button button-quiet" id="reset-button"><svg class="icon"><use href="#i-reset"/></svg>New session</button></section>
-  <footer><span>Question cards &amp; dice</span><span id="storage-note">Progress saved on this device <span class="small-dot">·</span> No account needed</span></footer>
+  <footer><span>STEM question cards &amp; dice</span><span id="storage-note">Progress saved on this device <span class="small-dot">·</span> No account needed</span></footer>
 </div>
 
-<dialog id="help-dialog" aria-labelledby="help-title"><button class="dialog-close" data-close="help-dialog" aria-label="Close instructions">×</button><span class="eyebrow">YOUR TABLE. YOUR GAME.</span><h2 id="help-title">A companion for the climb.</h2><p>Keep your physical board and pieces at the table. This website handles the question cards and a triangular pyramid die that rolls from 1 to 4.</p><ol class="help-steps"><li><span>01</span><div><h3>Build your deck</h3><p>Choose Elementary, Middle school, High school, or College. Pick Math, English, Science, or Engineering, then choose a course. Use All courses for a mixed deck. Courses change to suit the selected grade level.</p></div></li><li><span>02</span><div><h3>Take the challenge</h3><p>Draw a card, choose one answer, and check it. A correct answer unlocks one roll. After a wrong or revealed answer, draw another card.</p></div></li><li><span>03</span><div><h3>Roll, then move</h3><p>Roll the die and move your real piece using your board’s rules. Pass the device to the next player and draw again.</p></div></li></ol><div class="help-note"><svg class="icon"><use href="#i-spark"/></svg><p>Want different rules? Turn on <strong>Free roll</strong> to use the die anytime. Cards don’t repeat until you’ve drawn every card in the selected deck. Each focused course has six cards.</p></div><p class="privacy-note">Cards, settings, and session progress stay in this browser when storage is available. No accounts, camera, or player information required.</p><button class="button button-primary button-full" data-close="help-dialog">Let’s play<svg class="icon"><use href="#i-arrow"/></svg></button></dialog>
+<dialog id="help-dialog" aria-labelledby="help-title"><button class="dialog-close" data-close="help-dialog" aria-label="Close instructions">×</button><span class="eyebrow">YOUR TABLE. YOUR GAME.</span><h2 id="help-title">A companion for the climb.</h2><p>Keep your physical board and pieces at the table. This website handles the question cards and a triangular pyramid die that rolls from 1 to 4.</p><ol class="help-steps"><li><span>01</span><div><h3>Build your deck</h3><p>Choose Elementary, Middle school, High school, or College. Pick Math, Computer Science, Science, or Engineering, then choose a course. Use All courses for a mixed deck. Courses change to suit the selected grade level.</p></div></li><li><span>02</span><div><h3>Take the challenge</h3><p>Draw a card, choose one answer, and check it. A correct answer unlocks one roll. After a wrong or revealed answer, draw another card.</p></div></li><li><span>03</span><div><h3>Roll, then move</h3><p>Roll the die and move your real piece using your board’s rules. Pass the device to the next player and draw again.</p></div></li></ol><div class="help-note"><svg class="icon"><use href="#i-spark"/></svg><p>Want different rules? Turn on <strong>Free roll</strong> to use the die anytime. Cards don’t repeat until you’ve drawn every card in the selected deck. Each focused course has six cards.</p></div><p class="privacy-note">Cards, settings, and session progress stay in this browser when storage is available. No accounts, camera, or player information required.</p><button class="button button-primary button-full" data-close="help-dialog">Let’s play<svg class="icon"><use href="#i-arrow"/></svg></button></dialog>
 
 <dialog id="reset-dialog" aria-labelledby="reset-title"><span class="eyebrow">A FRESH START</span><h2 id="reset-title">Start a new session?</h2><p>This clears the current card, deck history, dice rolls, and session totals on this device. Your level, subject, course, and Free roll setting stay selected.</p><div class="dialog-actions"><button class="button button-secondary" data-close="reset-dialog">Keep playing</button><button class="button button-primary" id="confirm-reset">Start fresh</button></div></dialog>
 <noscript><div class="noscript">Enable JavaScript to draw question cards and roll the dice.</div></noscript>

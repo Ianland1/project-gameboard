@@ -1,4 +1,4 @@
-import { QUESTIONS, LEVELS, SUBJECTS, getCourses } from './questions.js?v=courses-v1';
+import { QUESTIONS, LEVELS, SUBJECTS, getCourses } from './questions.js?v=stem-v1';
 
 export const DIE_SIDES = 4;
 
@@ -95,8 +95,9 @@ export class Game {
     const game = new Game(random);
     if (!saved || ![1, 2].includes(saved.version)) return game;
     try {
-      const course = saved.version === 2 && getCourses(saved.level, saved.subject).some(c => c.id === saved.course) ? saved.course : 'all';
-      game.setDeck(saved.level, saved.subject, course);
+      const subject = saved.subject === 'english' ? 'computer-science' : saved.subject;
+      const course = saved.subject === subject && saved.version === 2 && getCourses(saved.level, subject).some(c => c.id === saved.course) ? saved.course : 'all';
+      game.setDeck(saved.level, subject, course);
       game.freeRoll = saved.freeRoll === true;
       for (const name of ['drawn', 'correct', 'rolls']) {
         if (!Number.isSafeInteger(saved[name]) || saved[name] < 0) throw new Error('Invalid counts');

@@ -1,13 +1,13 @@
-# Game Companion
+# STEM Practice — Game Companion
 
-A responsive website for a physical cyber pyramid game. The website provides question cards and a die that rolls from 1 to 4; players move their real pieces on their existing game board.
+A STEM practice companion for a physical cyber pyramid game. The website provides question cards and a die that rolls from 1 to 4; players move their real pieces on their existing game board.
 
 ## Included
 
-- 324 multiple-choice questions across 54 grade-specific course decks, with six cards per focused course.
+- 318 multiple-choice questions across 53 grade-specific course decks, with six cards per focused course.
 - Elementary (grades 1–5), Middle school (6–8), High school (9–12), and introductory College levels.
-- Math, English, Science, and Engineering, each with a course picker appropriate to the selected grade level.
-- Math includes Geometry, Algebra, Precalculus, Calculus, Linear Algebra, and more. Other subjects include Grammar, Literature, Biology, Chemistry, Physics, Mechanical, Electrical, Civil, and Computing.
+- Math, Computer Science, Science, and Engineering, each with a course picker appropriate to the selected grade level.
+- Math includes Geometry, Algebra, Precalculus, Calculus, Linear Algebra, and more. Computer Science includes Coding Basics, Programming, Algorithms, Digital Systems, and Data & Databases. Other subjects include Biology, Chemistry, Physics, Mechanical, Electrical, Civil, and Computing.
 - All courses mode combines the courses in the selected grade and subject into a mixed deck.
 - Shuffled cards and options, with no repeated cards until the selected deck is exhausted.
 - Answer explanations. By default, one correct answer unlocks one roll.
@@ -45,4 +45,4 @@ Upload the contents of `dist/` to any static website host. The included GitHub A
 
 ## Privacy
 
-No analytics, login, or player-information collection is included. Saved sessions retain course selection and separate card queues. Existing sessions migrate automatically without losing their current card or earned roll. App progress is stored under `pyra-companion-v1` in localStorage. Browser storage may be cleared by the browser or unavailable in private/restricted sessions.
+No analytics, login, or player-information collection is included. Saved sessions retain course selection and separate card queues. Existing sessions retain their totals and dice history. Current cards and queues remain for retained STEM subjects; a retired English selection moves to Computer Science with a fresh deck. App progress is stored under `pyra-companion-v1` in localStorage. Browser storage may be cleared by the browser or unavailable in private/restricted sessions.

@@ -6,8 +6,8 @@ import { LEVELS, SUBJECTS, QUESTIONS, COURSES, getCourses } from '../dist/questi
 const deterministic = max => max - 1;
 
 test('every level and subject has multiple courses with six valid cards each', () => {
-  assert.equal(COURSES.length, 54);
-  assert.equal(QUESTIONS.length, 324);
+  assert.equal(COURSES.length, 53);
+  assert.equal(QUESTIONS.length, 318);
   assert.equal(new Set(QUESTIONS.map(q => q.id)).size, QUESTIONS.length);
   for (const level of LEVELS) for (const subject of SUBJECTS) {
     const cards = QUESTIONS.filter(q => q.level === level.id && q.subject === subject.id);
@@ -19,7 +19,7 @@ test('every level and subject has multiple courses with six valid cards each', (
       assert.equal(focused.length, 6, `${level.id}/${subject.id}/${course.id}`);
       assert.equal(new Set(focused.map(q => q.prompt.toLowerCase())).size, 6);
     }
-    for (let i = 1; i <= 6; i++) assert.ok(cards.some(q => q.id === `${level.id}-${subject.id}-${i}`), 'Legacy card IDs survive');
+    if (subject.id !== 'computer-science') for (let i = 1; i <= 6; i++) assert.ok(cards.some(q => q.id === `${level.id}-${subject.id}-${i}`), 'Retained STEM card IDs survive');
     for (const card of cards) {
       assert.equal(new Set([card.answer, ...card.distractors]).size, 4, card.id);
       assert.ok(card.prompt && card.answer && card.explanation, card.id);
@@ -200,7 +200,7 @@ test('course filters provide geometry and calculus only at appropriate levels', 
   assert.equal(game.current, null);
   assert.equal(game.draw().course, 'calculus');
   assert.throws(() => game.setDeck('elementary', 'math', 'calculus'), /Unknown course/);
-  assert.throws(() => game.setDeck('college', 'english', 'calculus'), /Unknown course/);
+  assert.throws(() => game.setDeck('college', 'computer-science', 'calculus'), /Unknown course/);
 });
 
 test('switching courses cancels an earned roll and keeps each deck separate', () => {
@@ -246,6 +246,51 @@ test('existing version-1 sessions retain their current card, totals, and earned 
   assert.equal(restored.roll(),4);
   assert.equal(restored.roll(),null);
   assert.notEqual(restored.draw().id,q.id);
+});
+
+test('STEM catalog replaces English with Computer Science at every level', () => {
+  assert.deepEqual(SUBJECTS.map(s => s.id), ['math','computer-science','science','engineering']);
+  assert.equal(QUESTIONS.some(q => q.subject === 'english'), false);
+  assert.equal(getCourses('high','english').length, 0);
+  for (const level of LEVELS) {
+    const game = new Game(deterministic);
+    game.setDeck(level.id,'computer-science');
+    assert.equal(game.courses.length, 3);
+    assert.equal(game.cards.length, 18);
+    for (const course of game.courses) {
+      game.setDeck(level.id,'computer-science',course.id);
+      assert.equal(game.cards.length,6);
+      assert.equal(game.draw().subject,'computer-science');
+    }
+  }
+});
+
+test('retired English selections migrate without losing session totals or retained STEM queues', () => {
+  const base = new Game(deterministic);
+  base.setDeck('high','math','geometry');
+  base.draw();
+  const original = base.snapshot();
+  for (const version of [1,2]) {
+    const saved = {...original, version, level:'college', subject:'english', course:'rhetoric',
+      current:{id:'college-english-1'}, response:'old answer', phase:'correct',
+      correct:5, drawn:11, rolls:4, history:[3,1], freeRoll:false};
+    const restored = Game.restore(saved,deterministic);
+    assert.equal(restored.level,'college');
+    assert.equal(restored.subject,'computer-science');
+    assert.equal(restored.course,'all');
+    assert.equal(restored.current,null);
+    assert.equal(restored.phase,'empty');
+    assert.equal(restored.roll(),null);
+    assert.equal(restored.correct,5);
+    assert.equal(restored.drawn,11);
+    assert.equal(restored.rolls,4);
+    assert.deepEqual(restored.history,[3,1]);
+    if (version===2) assert.deepEqual(restored.decks['high-math-geometry'], original.decks['high-math-geometry']);
+    assert.equal(restored.draw().subject,'computer-science');
+    const free = Game.restore({...saved,freeRoll:true},deterministic);
+    assert.equal(free.freeRoll,true);
+    assert.equal(free.roll(),4);
+  }
 });
 
 test('shuffle preserves the input and produces a permutation', () => {
