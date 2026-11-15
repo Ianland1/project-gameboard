@@ -9,7 +9,7 @@ A STEM practice companion for a physical cyber pyramid game. The website provide
 - Math, Computer Science, Science, and Engineering, each with a course picker appropriate to the selected grade level.
 - Math includes Geometry, Algebra, Precalculus, Calculus, Linear Algebra, and more. Computer Science includes Coding Basics, Programming, Algorithms, Digital Systems, and Data & Databases. Other subjects include Biology, Chemistry, Physics, Mechanical, Electrical, Civil, and Computing.
 - All courses mode combines the courses in the selected grade and subject into a mixed deck.
-- My PDF notes mode builds a private study deck from a text-based PDF or pasted notes, with a review step, page citations, and optional local saving.
+- Study Notes mode builds a private study deck from a text-based PDF or pasted notes, with a review step, page citations, and optional local saving.
 - Shuffled cards and options, with no repeated cards until the selected deck is exhausted.
 - Answer explanations. By default, one correct answer unlocks one roll.
 - Free roll mode for your own game rules.
@@ -38,7 +38,7 @@ npm test
 
 ## Study from a PDF
 
-Choose **My PDF notes**, select a PDF, and choose up to 10, 20, or 30 cards. Generate the deck, review its questions/answers and source excerpts, uncheck unwanted cards, and select **Use this study deck**. Upload tools collapse while you play.
+Choose **Study Notes**, select a PDF, and choose up to 10, 20, or 30 cards. Generate the deck, review its questions/answers and source excerpts, uncheck unwanted cards, and select **Use this study deck**. Upload tools collapse while you play.
 
 - PDF reading and card generation happen locally. The original PDF is never uploaded or stored by the app.
 - PDF.js is loaded only when needed; question generation runs in a Web Worker when available. Re-generating from the same selected file reuses its extracted text.

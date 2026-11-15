@@ -139,7 +139,7 @@ export function createNotesController({ getDeck, getPersist, onInstall, onRemove
         title = 'Pasted notes';
       } else {
         const file = selectedFile;
-        title = file.name.replace(/\.pdf$/i, '').slice(0, 180) || 'PDF notes';
+        title = file.name.replace(/\.pdf$/i, '').slice(0, 180) || 'Study notes';
         if (parsedCache?.file === file) parsed = parsedCache.result;
         else {
           const readPdf = readPdfOverride || (await import('./pdf-reader.js?v=pdf-notes-v1')).readPdf;

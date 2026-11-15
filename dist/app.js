@@ -34,7 +34,7 @@ function save() {
 
 async function ensureNotesController() {
   if (!notesControllerPromise) {
-    notesControllerPromise = import('./notes-ui.js?v=pdf-notes-v1').then(({createNotesController}) => {
+    notesControllerPromise = import('./notes-ui.js?v=study-notes-v1').then(({createNotesController}) => {
       notesController = createNotesController({
         getDeck:() => game.notesDeck,
         getPersist:() => persistNotes,
@@ -117,7 +117,7 @@ function renderCard() {
   const deck = game.decks[game.deckKey];
   const number = game.cards.length - (deck?.remaining.length ?? 0);
   const courseLabel = custom ? game.notesDeck.title : game.courses.find(c => c.id === q.course).label;
-  const tag = custom ? 'MY STUDY NOTES' : `${level.short} / ${subject.label}`;
+  const tag = custom ? 'STUDY NOTES' : `${level.short} / ${subject.label}`;
   let feedback = '';
   if (answered) {
     const title = game.phase === 'review' ? 'Check your answer.' : correct ? (game.freeRoll ? 'Correct. Nicely done!' : game.phase === 'rolled' ? 'Correct. Your move is on the board.' : 'Correct. You earned a roll!') : game.phase === 'incorrect' ? 'Keep practicing. Here’s the answer.' : 'Answer revealed. Keep learning.';
