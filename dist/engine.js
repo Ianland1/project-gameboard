@@ -1,4 +1,4 @@
-import { QUESTIONS, LEVELS, SUBJECTS } from './questions.js?v=charcoal';
+import { QUESTIONS, LEVELS, SUBJECTS, getCourses } from './questions.js?v=courses-v1';
 
 export const DIE_SIDES = 4;
 
@@ -23,6 +23,7 @@ export class Game {
     this.random = random;
     this.level = 'elementary';
     this.subject = 'math';
+    this.course = 'all';
     this.freeRoll = false;
     this.current = null;
     this.phase = 'empty';
@@ -34,19 +35,23 @@ export class Game {
     this.lastRoll = null;
     this.history = [];
   }
-  get cards() { return QUESTIONS.filter(q => q.level === this.level && q.subject === this.subject); }
+  get cards() { return QUESTIONS.filter(q => q.level === this.level && q.subject === this.subject && (this.course === 'all' || q.course === this.course)); }
+  get deckKey() { return `${this.level}-${this.subject}-${this.course}`; }
+  get courses() { return getCourses(this.level, this.subject); }
   get canRoll() { return this.freeRoll || this.phase === 'correct'; }
-  setDeck(level, subject) {
+  setDeck(level, subject, course = 'all') {
     if (!LEVELS.some(l => l.id === level) || !SUBJECTS.some(s => s.id === subject)) throw new Error('Unknown deck');
-    if (level === this.level && subject === this.subject) return;
+    if (course !== 'all' && !getCourses(level, subject).some(c => c.id === course)) throw new Error('Unknown course');
+    if (level === this.level && subject === this.subject && course === this.course) return;
     this.level = level;
     this.subject = subject;
+    this.course = course;
     this.current = null;
     this.phase = 'empty';
     this.response = null;
   }
   draw() {
-    const key = `${this.level}-${this.subject}`;
+    const key = this.deckKey;
     let deck = this.decks[key];
     if (!deck || deck.remaining.length === 0) {
       const ids = shuffle(this.cards.map(q => q.id), this.random);
@@ -84,13 +89,14 @@ export class Game {
   }
   snapshot() {
     const { random, ...state } = this;
-    return { version: 1, ...state };
+    return { version: 2, ...state };
   }
   static restore(saved, random = randomInt) {
     const game = new Game(random);
-    if (!saved || saved.version !== 1) return game;
+    if (!saved || ![1, 2].includes(saved.version)) return game;
     try {
-      game.setDeck(saved.level, saved.subject);
+      const course = saved.version === 2 && getCourses(saved.level, saved.subject).some(c => c.id === saved.course) ? saved.course : 'all';
+      game.setDeck(saved.level, saved.subject, course);
       game.freeRoll = saved.freeRoll === true;
       for (const name of ['drawn', 'correct', 'rolls']) {
         if (!Number.isSafeInteger(saved[name]) || saved[name] < 0) throw new Error('Invalid counts');
@@ -98,15 +104,17 @@ export class Game {
       }
       game.history = Array.isArray(saved.history) ? saved.history.filter(n => Number.isInteger(n) && n >= 1 && n <= DIE_SIDES).slice(0, 5) : [];
       game.lastRoll = game.history[0] ?? null;
-      for (const level of LEVELS) for (const subject of SUBJECTS) {
-        const key = `${level.id}-${subject.id}`;
-        const deck = saved.decks?.[key];
-        const valid = QUESTIONS.filter(q => q.level === level.id && q.subject === subject.id).map(q => q.id);
-        if (deck && Array.isArray(deck.remaining) && new Set(deck.remaining).size === deck.remaining.length && deck.remaining.every(id => valid.includes(id))) {
-          game.decks[key] = { remaining: deck.remaining, last: valid.includes(deck.last) ? deck.last : null };
+      if (saved.version === 2) for (const level of LEVELS) for (const subject of SUBJECTS) {
+        for (const course of ['all', ...getCourses(level.id, subject.id).map(c => c.id)]) {
+          const key = `${level.id}-${subject.id}-${course}`;
+          const deck = saved.decks?.[key];
+          const valid = QUESTIONS.filter(q => q.level === level.id && q.subject === subject.id && (course === 'all' || q.course === course)).map(q => q.id);
+          if (deck && Array.isArray(deck.remaining) && new Set(deck.remaining).size === deck.remaining.length && deck.remaining.every(id => valid.includes(id))) {
+            game.decks[key] = { remaining: deck.remaining, last: valid.includes(deck.last) ? deck.last : null };
+          }
         }
       }
-      const question = QUESTIONS.find(q => q.id === saved.current?.id && q.level === game.level && q.subject === game.subject);
+      const question = game.cards.find(q => q.id === saved.current?.id);
       const phases = ['question', 'correct', 'incorrect', 'revealed', 'rolled'];
       if (question && phases.includes(saved.phase)) {
         const options = saved.current.options;
@@ -118,6 +126,12 @@ export class Game {
           game.phase = saved.phase;
           game.response = response;
         }
+      }
+      if (saved.version === 1 && game.current) {
+        game.decks[game.deckKey] = {
+          remaining: shuffle(game.cards.filter(q => q.id !== game.current.id).map(q => q.id), random),
+          last: game.current.id,
+        };
       }
       return game;
     } catch { return new Game(random); }

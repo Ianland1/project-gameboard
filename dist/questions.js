@@ -1,3 +1,8 @@
+import mathCourses from './courses/math.js?v=courses-v1';
+import englishCourses from './courses/english.js?v=courses-v1';
+import scienceCourses from './courses/science.js?v=courses-v1';
+import engineeringCourses from './courses/engineering.js?v=courses-v1';
+
 export const LEVELS = [
   { id: 'elementary', label: 'Elementary', detail: 'Grades 1–5', short: 'Elementary' },
   { id: 'middle', label: 'Middle school', detail: 'Grades 6–8', short: 'Middle school' },
@@ -152,9 +157,66 @@ const BANK = {
   },
 };
 
-export const QUESTIONS = Object.entries(BANK).flatMap(([level, subjects]) =>
+const BASE_QUESTIONS = Object.entries(BANK).flatMap(([level, subjects]) =>
   Object.entries(subjects).flatMap(([subject, rows]) => rows.map((row, i) => ({
     id: `${level}-${subject}-${i + 1}`, level, subject,
     prompt: row[0], answer: row[1], distractors: row.slice(2, 5), explanation: row[5],
   }))),
 );
+
+const COURSE_BANK = { math: mathCourses, english: englishCourses, science: scienceCourses, engineering: engineeringCourses };
+
+// Keep existing question IDs stable so saved cards survive the expanded catalog.
+const LEGACY_COURSES = {
+  elementary: {
+    math: ['arithmetic', 'geometry', 'fractions', 'arithmetic', 'arithmetic', 'geometry'],
+    english: ['grammar', 'vocabulary', 'grammar', 'vocabulary', 'grammar', 'grammar'],
+    science: ['life-science', 'physical-science', 'physical-science', 'life-science', 'physical-science', 'earth-space'],
+    engineering: ['simple-machines', 'design', 'design', 'structures', 'design', 'simple-machines'],
+  },
+  middle: {
+    math: ['pre-algebra', 'pre-algebra', 'geometry', 'statistics', 'statistics', 'pre-algebra'],
+    english: ['literature', 'grammar', 'writing', 'grammar', 'vocabulary', 'literature'],
+    science: ['biology', 'earth-space', 'chemistry', 'physics', 'earth-space', 'physics'],
+    engineering: ['mechanics', 'design', 'design', 'circuits', 'design', 'design'],
+  },
+  high: {
+    math: ['algebra', 'algebra', 'geometry', 'precalculus', 'algebra', 'statistics'],
+    english: ['composition', 'literature', 'rhetoric', 'literature', 'composition', 'composition'],
+    science: ['physics', 'physics', 'chemistry', 'chemistry', 'biology', 'physics'],
+    engineering: ['electrical', 'civil', 'civil', 'mechanical', 'mechanical', 'electrical'],
+  },
+  college: {
+    math: ['calculus', 'calculus', 'linear-algebra', 'statistics', 'calculus', 'linear-algebra'],
+    english: ['composition', 'rhetoric', 'rhetoric', 'composition', 'composition', 'rhetoric'],
+    science: ['physics', 'physics', 'chemistry', 'chemistry', 'chemistry', 'physics'],
+    engineering: ['civil', 'mechanical', 'mechanical', 'electrical', 'civil', 'mechanical'],
+  },
+};
+
+export const COURSES = LEVELS.flatMap(level => SUBJECTS.flatMap(subject =>
+  COURSE_BANK[subject.id][level.id].map(course => ({ id: course.id, label: course.label, level: level.id, subject: subject.id })),
+));
+
+export function getCourses(level, subject) {
+  return COURSES.filter(course => course.level === level && course.subject === subject);
+}
+
+export const QUESTIONS = LEVELS.flatMap(level => SUBJECTS.flatMap(subject => {
+  const originals = BASE_QUESTIONS.filter(q => q.level === level.id && q.subject === subject.id)
+    .map((q, i) => ({ ...q, course: LEGACY_COURSES[level.id][subject.id][i] }));
+  return COURSE_BANK[subject.id][level.id].flatMap(course => {
+    const additions = course.cards.map((row, i) => ({
+      id: `${level.id}-${subject.id}-${course.id}-${i + 1}`,
+      level: level.id, subject: subject.id, course: course.id,
+      prompt: row[0], answer: row[1], distractors: row.slice(2, 5), explanation: row[5],
+    }));
+    const seen = new Set();
+    return [...originals.filter(q => q.course === course.id), ...additions].filter(q => {
+      const key = q.prompt.toLowerCase().trim();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    }).slice(0, 6);
+  });
+}));

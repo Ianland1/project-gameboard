@@ -1,5 +1,5 @@
-import { Game } from './engine.js?v=charcoal';
-import { LEVELS, SUBJECTS, QUESTIONS } from './questions.js?v=charcoal';
+import { Game } from './engine.js?v=courses-v1';
+import { LEVELS, SUBJECTS, QUESTIONS } from './questions.js?v=courses-v1';
 
 const $ = selector => document.querySelector(selector);
 const storageKey = 'pyra-companion-v1';
@@ -35,12 +35,14 @@ function renderCard() {
   $('#card-container').style.setProperty('--subject', subject.color);
   const q = game.current;
   if (!q) {
-    $('#card-container').innerHTML = `<article class="challenge empty-card"><div class="empty-symbol">${icon('dice')}</div><h3>Ready for a challenge?</h3><p>Your ${esc(level.short.toLowerCase())} ${esc(subject.label.toLowerCase())} deck is ready. Draw a card and see what you know.</p><button class="button button-primary" data-action="draw" ${rolling ? 'disabled' : ''}>Draw a card${icon('arrow')}</button><span class="card-small-note">NO TIMER. TAKE A MOMENT TO THINK.</span></article>`;
+    const name = game.course === 'all' ? `${level.short.toLowerCase()} ${subject.label.toLowerCase()}` : game.courses.find(c => c.id === game.course).label;
+    $('#card-container').innerHTML = `<article class="challenge empty-card"><div class="empty-symbol">${icon('dice')}</div><h3>Ready for a challenge?</h3><p>Your ${esc(name)} deck is ready. Draw a card and see what you know.</p><button class="button button-primary" data-action="draw" ${rolling ? 'disabled' : ''}>Draw a card${icon('arrow')}</button><span class="card-small-note">NO TIMER. TAKE A MOMENT TO THINK.</span></article>`;
     return;
   }
   const answered = game.phase !== 'question';
   const isCorrect = ['correct', 'rolled'].includes(game.phase);
-  const deck = game.decks[`${game.level}-${game.subject}`];
+  const deck = game.decks[game.deckKey];
+  const courseLabel = game.courses.find(c => c.id === q.course).label;
   const number = game.cards.length - (deck?.remaining.length ?? 0);
   const feedback = !answered ? '' : `<div class="card-feedback ${isCorrect ? 'feedback-correct' : game.phase === 'incorrect' ? 'feedback-incorrect' : ''}" tabindex="-1" id="card-feedback"><strong>${isCorrect ? (game.freeRoll ? 'Correct. Nicely done!' : game.phase === 'rolled' ? 'Correct. Your move is on the board.' : 'Correct. You earned a roll!') : game.phase === 'incorrect' ? 'Not quite. Here’s the idea.' : 'Answer revealed. Keep learning.'}</strong>${esc(q.explanation)}${!isCorrect && !game.freeRoll ? '<div class="question-stage-note">Draw a new card for another chance to earn a roll.</div>' : ''}</div>`;
   const options = q.options.map((option, i) => {
@@ -55,7 +57,7 @@ function renderCard() {
   if (!answered) actions = `<button class="button button-quiet" data-action="reveal" ${rolling ? 'disabled' : ''}>Reveal answer</button><button class="button button-primary" data-action="check" ${selected === null || rolling ? 'disabled' : ''}>Check answer${icon('arrow')}</button>`;
   else if (game.phase === 'correct' && !game.freeRoll) actions = `<span class="transition-note">Knowledge → momentum</span><button class="button button-primary" data-action="roll" ${rolling ? 'disabled' : ''}>Roll your die${icon('dice')}</button>`;
   else actions = `<span class="transition-note">${game.phase === 'rolled' ? 'Pass the device or keep playing.' : 'A new card. A fresh challenge.'}</span><button class="button button-primary" data-action="draw" ${rolling ? 'disabled' : ''}>Next card${icon('arrow')}</button>`;
-  $('#card-container').innerHTML = `<article class="challenge"><div class="challenge-top"><span class="card-tag">${icon(subject.icon)}${esc(level.short)} / ${esc(subject.label)}</span>${game.phase === 'question' ? `<button class="skip-button" data-action="draw" ${rolling ? 'disabled' : ''}>Skip${icon('arrow')}</button>` : `<span class="card-code">${String(number).padStart(2,'0')} / 06</span>`}</div><div class="question-body"><h3 id="question-title" tabindex="-1">${esc(q.prompt)}</h3><div class="answer-options" role="group" aria-label="Answer choices">${options}</div></div>${feedback}<div class="challenge-actions">${actions}</div></article>`;
+  $('#card-container').innerHTML = `<article class="challenge"><div class="challenge-top"><span class="card-tag">${icon(subject.icon)}<span>${esc(level.short)} / ${esc(subject.label)}<span class="card-course">${esc(courseLabel)}</span></span></span>${game.phase === 'question' ? `<button class="skip-button" data-action="draw" ${rolling ? 'disabled' : ''}>Skip${icon('arrow')}</button>` : `<span class="card-code">${String(number).padStart(2,'0')} / ${String(game.cards.length).padStart(2,'0')}</span>`}</div><div class="question-body"><h3 id="question-title" tabindex="-1">${esc(q.prompt)}</h3><div class="answer-options" role="group" aria-label="Answer choices">${options}</div></div>${feedback}<div class="challenge-actions">${actions}</div></article>`;
 }
 
 function renderDice() {
@@ -85,6 +87,10 @@ function render() {
   for (const input of document.querySelectorAll('input[name="subject"]')) input.checked = input.value === game.subject;
   $('#level-fieldset').disabled = rolling;
   $('#subject-fieldset').disabled = rolling;
+  $('#course-fieldset').disabled = rolling;
+  $('#course-select').innerHTML = `<option value="all" ${game.course === 'all' ? 'selected' : ''}>All courses — mixed deck</option>` + game.courses.map(c => `<option value="${c.id}" ${game.course === c.id ? 'selected' : ''}>${esc(c.label)}</option>`).join('');
+  $('#course-hint').textContent = game.course === 'all' ? `${game.courses.length} courses · ${game.cards.length} cards` : `${game.cards.length} question cards`;
+  $('#deck-size').textContent = `${String(game.cards.length).padStart(2,'0')} CARDS / DECK`;
   $('#reset-button').disabled = rolling;
   $('#stat-drawn').textContent = game.drawn;
   $('#stat-correct').textContent = game.correct;
@@ -157,6 +163,13 @@ for (const name of ['level','subject']) {
     announce('Deck changed. Draw a card when you’re ready.');
   });
 }
+$('#course-select').addEventListener('change', event => {
+  if (rolling) return;
+  game.setDeck(game.level, game.subject, event.target.value);
+  selected = null;
+  render();
+  announce('Course changed. Draw a card when you’re ready.');
+});
 $('#roll-button').addEventListener('click', roll);
 $('#free-roll').addEventListener('change', event => {
   if (rolling) return;
@@ -168,9 +181,9 @@ $('#help-button').addEventListener('click', () => $('#help-dialog').showModal())
 $('#reset-button').addEventListener('click', () => $('#reset-dialog').showModal());
 document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => document.getElementById(button.dataset.close).close()));
 $('#confirm-reset').addEventListener('click', () => {
-  const { level, subject, freeRoll } = game;
+  const { level, subject, course, freeRoll } = game;
   game = new Game();
-  game.setDeck(level, subject);
+  game.setDeck(level, subject, course);
   game.freeRoll = freeRoll;
   selected = null;
   $('#reset-dialog').close();

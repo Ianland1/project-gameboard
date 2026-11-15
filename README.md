@@ -4,9 +4,11 @@ A responsive website for a physical cyber pyramid game. The website provides que
 
 ## Included
 
-- 96 original multiple-choice questions: six cards for every level/subject combination.
+- 324 multiple-choice questions across 54 grade-specific course decks, with six cards per focused course.
 - Elementary (grades 1–5), Middle school (6–8), High school (9–12), and introductory College levels.
-- Math, English, Science, and Engineering decks.
+- Math, English, Science, and Engineering, each with a course picker appropriate to the selected grade level.
+- Math includes Geometry, Algebra, Precalculus, Calculus, Linear Algebra, and more. Other subjects include Grammar, Literature, Biology, Chemistry, Physics, Mechanical, Electrical, Civil, and Computing.
+- All courses mode combines the courses in the selected grade and subject into a mixed deck.
 - Shuffled cards and options, with no repeated cards until the selected deck is exhausted.
 - Answer explanations. By default, one correct answer unlocks one roll.
 - Free roll mode for your own game rules.
@@ -35,7 +37,7 @@ npm test
 
 ## Customize
 
-Edit `dist/questions.js` to change the question bank. Each row contains a question, the correct answer, three distractors, and an explanation. The questions are starting content for play; review their difficulty for your particular players. Edit `dist/styles.css` for the visual design. All state stays in the visitor's browser; there is no backend or shared player scoreboard.
+Edit the subject modules in `dist/courses/` to change the course catalog or its question cards. Each course contains an ID, a label, and six rows containing a question, the correct answer, three distractors, and an explanation. `dist/questions.js` merges the catalog with the original cards while preserving their IDs for saved sessions. The questions are starting content for play; review their difficulty for your particular players. Edit `dist/styles.css` for the visual design. All state stays in the visitor's browser; there is no backend or shared player scoreboard.
 
 ## Hosting
 
@@ -43,4 +45,4 @@ Upload the contents of `dist/` to any static website host. The included GitHub A
 
 ## Privacy
 
-No analytics, login, or player-information collection is included. App progress is stored under `pyra-companion-v1` in localStorage. Browser storage may be cleared by the browser or unavailable in private/restricted sessions.
+No analytics, login, or player-information collection is included. Saved sessions retain course selection and separate card queues. Existing sessions migrate automatically without losing their current card or earned roll. App progress is stored under `pyra-companion-v1` in localStorage. Browser storage may be cleared by the browser or unavailable in private/restricted sessions.
