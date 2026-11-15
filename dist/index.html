@@ -7,8 +7,8 @@
   <meta name="description" content="Practice math, computer science, science, and engineering with grade-appropriate question cards and a pyramid die for your physical game board.">
   <title>STEM Practice — Game Companion</title>
   <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="./styles.css?v=clean-intro">
-  <script type="module" src="./app.js?v=stem-v1"></script>
+  <link rel="stylesheet" href="./styles.css?v=pdf-notes-v1">
+  <script type="module" src="./app.js?v=pdf-notes-v1"></script>
 </head>
 <body>
 <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -17,6 +17,7 @@
   <symbol id="i-computer-science" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="15" rx="2"/><path d="M8 21h8m-4-3v3M7 7l3 3-3 3m6 0h4"/></symbol>
   <symbol id="i-science" viewBox="0 0 24 24"><path d="M9 3h6m-5 0v6l-6 10a1 1 0 0 0 1 2h14a1 1 0 0 0 1-2L14 9V3M7 15h10"/><path d="M10 17h.01m4 2h.01"/></symbol>
   <symbol id="i-engineering" viewBox="0 0 24 24"><path d="m12 2 10 18H2L12 2Zm0 0 2 13 8 5M2 20l12-5"/></symbol>
+  <symbol id="i-notes" viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6V2Zm8 0v5h4M9 11h6m-6 4h6m-6 4h4"/></symbol>
   <symbol id="i-dice" viewBox="0 0 24 24"><path d="m12 2 10 14-9 6-11-6L12 2Zm0 0 1 20"/></symbol>
   <symbol id="i-spark" viewBox="0 0 24 24"><path d="m13 2-9 12h7l-1 8 10-13h-8l1-7Z"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
@@ -42,11 +43,32 @@
   <main id="play" class="workspace">
     <section class="deck-panel panel" aria-labelledby="deck-title">
       <div class="panel-heading"><div><span class="section-number">01</span><h2 id="deck-title">The question deck</h2></div><span class="mono panel-meta" id="deck-size">18 CARDS / DECK</span></div>
-      <div class="deck-controls">
+      <div class="source-tabs" role="tablist" aria-label="Question source">
+        <button id="source-courses" role="tab" aria-selected="true" aria-controls="courses-panel" tabindex="0">STEM courses</button>
+        <button id="source-notes" role="tab" aria-selected="false" aria-controls="notes-panel" tabindex="-1">My PDF notes</button>
+      </div>
+      <div class="deck-controls" id="courses-panel" role="tabpanel" aria-labelledby="source-courses">
         <fieldset id="level-fieldset"><legend>Choose your level</legend><div id="levels" class="levels"></div></fieldset>
         <fieldset id="subject-fieldset"><legend>Pick a subject</legend><div id="subjects" class="subjects"></div></fieldset>
         <fieldset id="course-fieldset"><legend>Choose a course</legend><div class="course-picker"><select id="course-select" aria-label="Course" aria-describedby="course-hint"></select><span id="course-hint" class="course-hint"></span></div></fieldset>
       </div>
+      <section id="notes-panel" class="notes-panel" role="tabpanel" aria-labelledby="source-notes" hidden>
+        <fieldset id="notes-fields" aria-label="PDF study deck tools">
+          <div class="notes-intro"><h3>Study your notes. Play your game.</h3><p>Turn definitions and facts from your PDF into a study deck. Review the cards, then use them with the pyramid die.</p></div>
+          <div id="notes-active" class="notes-active" hidden><div><strong id="notes-active-name"></strong><p id="notes-active-detail"></p></div><button id="notes-clear" class="button button-quiet">Remove deck</button></div>
+          <details id="notes-tools" open><summary id="notes-tools-summary" hidden>Add or replace notes</summary>
+          <div id="notes-drop" class="notes-upload"><label for="notes-file">Choose a PDF of your notes</label><input id="notes-file" type="file" accept="application/pdf,.pdf" aria-describedby="notes-file-hint notes-file-info"><p id="notes-file-hint">Up to 25 MB · first 120 pages · selectable text</p><p id="notes-file-info"></p></div>
+          <details id="notes-paste-details" class="notes-paste"><summary>Scanned PDF or copied notes? Paste the text instead</summary><label for="notes-text" class="sr-only">Text from your notes</label><textarea id="notes-text" rows="6" maxlength="400000" placeholder="Paste readable notes here. Clear definitions such as “Voltage: electrical potential difference” work well."></textarea><p>Text entered here is used instead of the PDF. Handwritten or image-only PDFs need text extraction first.</p></details>
+          <div class="notes-generate-row"><label for="notes-count">Deck size<select id="notes-count"><option value="10">Up to 10 cards</option><option value="20" selected>Up to 20 cards</option><option value="30">Up to 30 cards</option></select></label><button id="notes-generate" class="button button-primary" disabled>Generate study deck</button><button id="notes-cancel" class="button button-secondary" hidden>Cancel</button></div>
+          <div id="notes-progress-wrap" class="notes-progress" hidden><progress id="notes-progress" max="100" value="0" aria-label="Study deck generation progress"></progress></div>
+          <p id="notes-status" class="notes-status" role="status" aria-live="polite"></p>
+          <div id="notes-draft" class="notes-draft" hidden><h4 id="notes-draft-title">Review your cards</h4><p class="notes-helper">Uncheck any card you don’t want. Cards use only the readable text in your notes; check their wording before playing.</p><details><summary id="notes-review-summary">Review generated cards</summary><ol id="notes-preview"></ol></details><button id="notes-use" class="button button-primary button-full">Use this study deck</button></div>
+
+          </details>
+          <label class="notes-persist"><input id="notes-persist" type="checkbox"><span>Save this study deck on this device<small>Optional. Otherwise, the deck stays in this tab until you close it.</small></span></label>
+          <p class="notes-privacy">Your PDF is processed on your device and is never uploaded. Page references help you check each answer.</p>
+        </fieldset>
+      </section>
       <div class="card-container" id="card-container"></div>
     </section>
 
@@ -85,9 +107,9 @@
   <footer><span>STEM question cards &amp; dice</span><span id="storage-note">Progress saved on this device <span class="small-dot">·</span> No account needed</span></footer>
 </div>
 
-<dialog id="help-dialog" aria-labelledby="help-title"><button class="dialog-close" data-close="help-dialog" aria-label="Close instructions">×</button><span class="eyebrow">YOUR TABLE. YOUR GAME.</span><h2 id="help-title">A companion for the climb.</h2><p>Keep your physical board and pieces at the table. This website handles the question cards and a triangular pyramid die that rolls from 1 to 4.</p><ol class="help-steps"><li><span>01</span><div><h3>Build your deck</h3><p>Choose Elementary, Middle school, High school, or College. Pick Math, Computer Science, Science, or Engineering, then choose a course. Use All courses for a mixed deck. Courses change to suit the selected grade level.</p></div></li><li><span>02</span><div><h3>Take the challenge</h3><p>Draw a card, choose one answer, and check it. A correct answer unlocks one roll. After a wrong or revealed answer, draw another card.</p></div></li><li><span>03</span><div><h3>Roll, then move</h3><p>Roll the die and move your real piece using your board’s rules. Pass the device to the next player and draw again.</p></div></li></ol><div class="help-note"><svg class="icon"><use href="#i-spark"/></svg><p>Want different rules? Turn on <strong>Free roll</strong> to use the die anytime. Cards don’t repeat until you’ve drawn every card in the selected deck. Each focused course has six cards.</p></div><p class="privacy-note">Cards, settings, and session progress stay in this browser when storage is available. No accounts, camera, or player information required.</p><button class="button button-primary button-full" data-close="help-dialog">Let’s play<svg class="icon"><use href="#i-arrow"/></svg></button></dialog>
+<dialog id="help-dialog" aria-labelledby="help-title"><button class="dialog-close" data-close="help-dialog" aria-label="Close instructions">×</button><span class="eyebrow">YOUR TABLE. YOUR GAME.</span><h2 id="help-title">A companion for the climb.</h2><p>Keep your physical board and pieces at the table. This website handles the question cards and a triangular pyramid die that rolls from 1 to 4.</p><ol class="help-steps"><li><span>01</span><div><h3>Build your deck</h3><p>Choose Elementary, Middle school, High school, or College. Pick Math, Computer Science, Science, or Engineering, then choose a course. Use All courses for a mixed deck. Courses change to suit the selected grade level. Or choose My PDF notes to make and review a deck from your own notes.</p></div></li><li><span>02</span><div><h3>Take the challenge</h3><p>Draw a card, choose one answer, and check it. A correct answer unlocks one roll. After a wrong or revealed answer, draw another card.</p></div></li><li><span>03</span><div><h3>Roll, then move</h3><p>Roll the die and move your real piece using your board’s rules. Pass the device to the next player and draw again.</p></div></li></ol><div class="help-note"><svg class="icon"><use href="#i-spark"/></svg><p>Want different rules? Turn on <strong>Free roll</strong> to use the die anytime. Cards don’t repeat until you’ve drawn every card in the selected deck. Each focused course has six cards.</p></div><p class="privacy-note">PDFs are processed on your device. Study decks are saved only when you select Save this study deck; session totals and built-in progress stay in this browser when storage is available. No accounts, camera, or player information required.</p><button class="button button-primary button-full" data-close="help-dialog">Let’s play<svg class="icon"><use href="#i-arrow"/></svg></button></dialog>
 
-<dialog id="reset-dialog" aria-labelledby="reset-title"><span class="eyebrow">A FRESH START</span><h2 id="reset-title">Start a new session?</h2><p>This clears the current card, deck history, dice rolls, and session totals on this device. Your level, subject, course, and Free roll setting stay selected.</p><div class="dialog-actions"><button class="button button-secondary" data-close="reset-dialog">Keep playing</button><button class="button button-primary" id="confirm-reset">Start fresh</button></div></dialog>
+<dialog id="reset-dialog" aria-labelledby="reset-title"><span class="eyebrow">A FRESH START</span><h2 id="reset-title">Start a new session?</h2><p>This clears the current card, deck history, dice rolls, and session totals on this device. Your STEM selections, PDF study deck, and Free roll setting stay available.</p><div class="dialog-actions"><button class="button button-secondary" data-close="reset-dialog">Keep playing</button><button class="button button-primary" id="confirm-reset">Start fresh</button></div></dialog>
 <noscript><div class="noscript">Enable JavaScript to draw question cards and roll the dice.</div></noscript>
 </body>
 </html>
