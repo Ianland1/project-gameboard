@@ -1,12 +1,20 @@
 import { Game } from './engine.js?v=pdf-notes-v1';
 import { LEVELS, SUBJECTS, QUESTIONS } from './questions.js?v=stem-v1';
+import { PlayerTracker } from './players.js?v=players-v1';
+import { createPlayerController } from './players-ui.js?v=players-v1';
 
 const $ = selector => document.querySelector(selector);
 const storageKey = 'pyra-companion-v1';
+const playersStorageKey = 'stem-practice-players-v1';
 let storageAvailable = true;
+let playerStorageAvailable = true;
 let game;
 try { game = Game.restore(JSON.parse(localStorage.getItem(storageKey))); }
 catch { game = new Game(); }
+let players;
+try { players = PlayerTracker.restore(JSON.parse(localStorage.getItem(playersStorageKey))); }
+catch { players = new PlayerTracker(); }
+let playerController = null;
 let selected = null;
 let rolling = false;
 let mode = game.source === 'notes' ? 'notes' : 'built-in';
@@ -25,10 +33,17 @@ announcer.setAttribute('aria-live', 'polite');
 announcer.setAttribute('aria-atomic', 'true');
 document.body.append(announcer);
 function announce(message) { announcer.textContent = message; }
+function savePlayers() {
+  try { localStorage.setItem(playersStorageKey, JSON.stringify(players.snapshot())); playerStorageAvailable = true; }
+  catch { playerStorageAvailable = false; }
+  $('#players-storage').textContent = playerStorageAvailable ? 'Counters saved on this device.' : 'Counters stay in this tab. Browser storage is unavailable.';
+  return playerStorageAvailable;
+}
 function save() {
   try { localStorage.setItem(storageKey, JSON.stringify(game.snapshot({includeNotes:persistNotes}))); storageAvailable = true; }
   catch { storageAvailable = false; }
   $('#storage-note').textContent = storageAvailable ? (game.notesDeck && !persistNotes ? 'Session totals saved · PDF deck stays in this tab' : 'Progress saved on this device · No account needed') : 'Playing in memory · Keep this tab open to keep your session';
+  savePlayers();
   return storageAvailable;
 }
 
@@ -94,6 +109,7 @@ async function setMode(next) {
 $('#levels').innerHTML = LEVELS.map(level => `<label class="choice level-choice"><input type="radio" name="level" value="${level.id}" aria-label="${level.label}, ${level.detail}"><span>${level.label}</span></label>`).join('');
 $('#subjects').innerHTML = SUBJECTS.map(subject => `<label class="choice subject-choice" style="--choice-color:${subject.color}"><input type="radio" name="subject" value="${subject.id}"><span>${icon(subject.icon)}<strong>${subject.label}</strong><small>${subject.detail}</small></span></label>`).join('');
 $('#question-total').textContent = `${QUESTIONS.length} question cards`;
+playerController = createPlayerController({getTracker:() => players, onChange:savePlayers, isBusy:() => rolling, announce});
 
 function renderCard() {
   const custom = mode === 'notes';
@@ -193,6 +209,7 @@ function render() {
   renderDice();
   save();
   notesController?.sync();
+  playerController?.sync();
 }
 
 function draw() {
@@ -207,6 +224,10 @@ async function roll() {
   if (isBusy()) return;
   const result = game.roll();
   if (result === null) return;
+  const rollPlayer = players.activePlayer;
+  const rollId = `roll-${globalThis.crypto?.randomUUID?.() || `${Date.now()}-${game.rolls}-${Math.random().toString(36).slice(2)}`}`;
+  players.recordRoll(rollId, result);
+  $('#players-message').textContent = `${rollPlayer.name} rolled ${result}. Apply it to their counter when you move the piece.`;
   rolling = true;
   save(); // Consume the earned roll before animating, including across a refresh.
   render();
@@ -216,7 +237,7 @@ async function roll() {
   die.classList.remove('is-rolling');
   rolling = false;
   render();
-  announce(`You rolled ${result}. Move ${result} ${result === 1 ? 'space' : 'spaces'} on your physical board.`);
+  announce(`${rollPlayer.name} rolled ${result}. Move ${result} ${result === 1 ? 'space' : 'spaces'} on your board, then apply the roll to their counter.`);
   if (matchMedia('(max-width: 600px)').matches) $('#dice-title').scrollIntoView({behavior:reduceMotion.matches ? 'instant' : 'smooth',block:'start'});
 }
 
@@ -292,11 +313,13 @@ $('#confirm-reset').addEventListener('click', () => {
     if (source === 'built-in') game.setSource('built-in');
   }
   game.freeRoll = freeRoll;
+  players.resetPositions();
+  $('#players-message').textContent = 'Positions reset to 0. Select a player before rolling.';
   selected = null;
   $('#reset-dialog').close();
   render();
   $('[data-action="draw"]')?.focus({preventScroll:true});
-  announce('New session started. Draw your first card.');
+  announce('New session started. Player counters reset to 0. Draw your first card.');
 });
 document.querySelectorAll('dialog').forEach(dialog => dialog.addEventListener('click', event => {
   if (event.target !== dialog) return;

@@ -15,6 +15,8 @@ A STEM practice companion for a physical cyber pyramid game. The website provide
 - Free roll mode for your own game rules.
 - Animated D4-style triangular pyramid die with a three-sided base, cryptographically randomized rolls from 1 to 4, and recent-roll history. Each number is equally likely.
 - Session totals and progress saved locally when browser storage is available.
+- One to four editable player counters, starting at 0 with no board length or finish tile required. Select the player before rolling, then apply the latest result once or adjust positions manually.
+- Player counters save separately from Study Notes data. New session resets positions while retaining player names. A later roll replaces an unapplied result; the +/− controls or position field can correct any physical-board move. After counting a roll manually, choose Skip update so it is not added again.
 - Responsive layout, keyboard controls, accessible dialogs, and reduced-motion support.
 
 ## Run locally
@@ -60,4 +62,4 @@ Upload the contents of `dist/` to any static website host. The included GitHub A
 
 ## Privacy
 
-No analytics, login, or player-information collection is included. Saved sessions retain course selection and separate card queues. Existing sessions retain their totals and dice history. Opted-in PDF decks restore along with current cards and spent-roll state. Current cards and queues remain for retained STEM subjects; a retired English selection moves to Computer Science with a fresh deck. App progress is stored under `pyra-companion-v1` in localStorage. Browser storage may be cleared by the browser or unavailable in private/restricted sessions.
+No analytics, login, or player-information collection is included. Saved sessions retain course selection and separate card queues. Existing sessions retain their totals and dice history. Opted-in PDF decks restore along with current cards and spent-roll state. Current cards and queues remain for retained STEM subjects; a retired English selection moves to Computer Science with a fresh deck. App progress is stored under `pyra-companion-v1` in localStorage. Optional player names, positions, and pending-roll state are stored locally under `stem-practice-players-v1`; they are not uploaded. Clearing or opting out of a Study Notes deck does not clear player counters. Browser storage may be cleared by the browser or unavailable in private/restricted sessions.

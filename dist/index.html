@@ -7,8 +7,8 @@
   <meta name="description" content="Practice math, computer science, science, and engineering with grade-appropriate question cards and a pyramid die for your physical game board.">
   <title>STEM Practice — Game Companion</title>
   <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="./styles.css?v=pdf-notes-v1">
-  <script type="module" src="./app.js?v=study-notes-v1"></script>
+  <link rel="stylesheet" href="./styles.css?v=players-v1">
+  <script type="module" src="./app.js?v=players-v1"></script>
 </head>
 <body>
 <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -100,6 +100,15 @@
       <div class="dice-actions"><button id="roll-button" class="button button-primary button-full"><svg class="icon"><use href="#i-dice"/></svg><span>Roll the die</span></button><p id="roll-hint" class="helper-text"></p></div>
       <div class="roll-history"><span class="field-label">RECENT ROLLS</span><div id="roll-history" aria-label="Recent dice rolls, newest first"></div></div>
       <label class="mode-switch" for="free-roll"><span><strong>Free roll</strong><small>Roll anytime. Use your table’s rules.</small></span><input type="checkbox" id="free-roll" role="switch"><span class="switch-track" aria-hidden="true"></span></label>
+      <section id="player-tracker" class="player-tracker" aria-labelledby="players-title">
+        <div class="players-heading"><div><h3 id="players-title">Player counters</h3><span id="players-count">2 / 4 players</span></div><button id="player-add" class="button button-secondary">+ Add player</button></div>
+        <p id="players-active" class="players-active">Rolling for Player 1</p>
+        <div id="players-grid" class="players-grid" aria-label="Player positions"></div>
+        <div class="player-move-actions"><button id="player-apply" class="button button-primary" disabled>Apply dice roll</button><button id="player-skip" class="button button-quiet" hidden>Skip update</button></div>
+        <p id="players-message" class="players-message">Select a player before rolling. Apply the latest roll once. If you count it manually with + or −, choose Skip update.</p>
+        <p class="players-note">Start is 0. No board length needed.</p>
+        <p id="players-storage" class="players-storage"></p>
+      </section>
     </aside>
   </main>
 
@@ -107,9 +116,9 @@
   <footer><span>STEM question cards &amp; dice</span><span id="storage-note">Progress saved on this device <span class="small-dot">·</span> No account needed</span></footer>
 </div>
 
-<dialog id="help-dialog" aria-labelledby="help-title"><button class="dialog-close" data-close="help-dialog" aria-label="Close instructions">×</button><span class="eyebrow">YOUR TABLE. YOUR GAME.</span><h2 id="help-title">A companion for the climb.</h2><p>Keep your physical board and pieces at the table. This website handles the question cards and a triangular pyramid die that rolls from 1 to 4.</p><ol class="help-steps"><li><span>01</span><div><h3>Build your deck</h3><p>Choose Elementary, Middle school, High school, or College. Pick Math, Computer Science, Science, or Engineering, then choose a course. Use All courses for a mixed deck. Courses change to suit the selected grade level. Or choose Study Notes to make and review a deck from your own notes.</p></div></li><li><span>02</span><div><h3>Take the challenge</h3><p>Draw a card, choose one answer, and check it. A correct answer unlocks one roll. After a wrong or revealed answer, draw another card.</p></div></li><li><span>03</span><div><h3>Roll, then move</h3><p>Roll the die and move your real piece using your board’s rules. Pass the device to the next player and draw again.</p></div></li></ol><div class="help-note"><svg class="icon"><use href="#i-spark"/></svg><p>Want different rules? Turn on <strong>Free roll</strong> to use the die anytime. Cards don’t repeat until you’ve drawn every card in the selected deck. Each focused course has six cards.</p></div><p class="privacy-note">PDFs are processed on your device. Study decks are saved only when you select Save this study deck; session totals and built-in progress stay in this browser when storage is available. No accounts, camera, or player information required.</p><button class="button button-primary button-full" data-close="help-dialog">Let’s play<svg class="icon"><use href="#i-arrow"/></svg></button></dialog>
+<dialog id="help-dialog" aria-labelledby="help-title"><button class="dialog-close" data-close="help-dialog" aria-label="Close instructions">×</button><span class="eyebrow">YOUR TABLE. YOUR GAME.</span><h2 id="help-title">A companion for the climb.</h2><p>Keep your physical board and pieces at the table. This website handles the question cards and a triangular pyramid die that rolls from 1 to 4.</p><ol class="help-steps"><li><span>01</span><div><h3>Build your deck</h3><p>Choose Elementary, Middle school, High school, or College. Pick Math, Computer Science, Science, or Engineering, then choose a course. Use All courses for a mixed deck. Courses change to suit the selected grade level. Or choose Study Notes to make and review a deck from your own notes.</p></div></li><li><span>02</span><div><h3>Take the challenge</h3><p>Draw a card, choose one answer, and check it. A correct answer unlocks one roll. After a wrong or revealed answer, draw another card.</p></div></li><li><span>03</span><div><h3>Roll, then move</h3><p>Select the player who is rolling. Roll the die and move the real piece using your board’s rules, then apply the roll to that player’s counter once. Use +, −, or type a position to match the physical board. If you count a roll manually, choose Skip update to dismiss its button. Add up to four players; no total tile count is needed.</p></div></li></ol><div class="help-note"><svg class="icon"><use href="#i-spark"/></svg><p>Want different rules? Turn on <strong>Free roll</strong> to use the die anytime. Cards don’t repeat until you’ve drawn every card in the selected deck. Each focused course has six cards.</p></div><p class="privacy-note">PDFs are processed on your device. Study decks are saved only when you select Save this study deck; session totals and built-in progress stay in this browser when storage is available. No accounts, camera, or player information required.</p><button class="button button-primary button-full" data-close="help-dialog">Let’s play<svg class="icon"><use href="#i-arrow"/></svg></button></dialog>
 
-<dialog id="reset-dialog" aria-labelledby="reset-title"><span class="eyebrow">A FRESH START</span><h2 id="reset-title">Start a new session?</h2><p>This clears the current card, deck history, dice rolls, and session totals on this device. Your STEM selections, study deck, and Free roll setting stay available.</p><div class="dialog-actions"><button class="button button-secondary" data-close="reset-dialog">Keep playing</button><button class="button button-primary" id="confirm-reset">Start fresh</button></div></dialog>
+<dialog id="reset-dialog" aria-labelledby="reset-title"><span class="eyebrow">A FRESH START</span><h2 id="reset-title">Start a new session?</h2><p>This clears the current card, deck history, dice rolls, session totals, and all player positions. Your player names, STEM selections, study deck, and Free roll setting stay available.</p><div class="dialog-actions"><button class="button button-secondary" data-close="reset-dialog">Keep playing</button><button class="button button-primary" id="confirm-reset">Start fresh</button></div></dialog>
 <noscript><div class="noscript">Enable JavaScript to draw question cards and roll the dice.</div></noscript>
 </body>
 </html>

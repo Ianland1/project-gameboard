@@ -5,6 +5,6 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "check": "node --check dist/app.js && node --check dist/engine.js && node --check dist/questions.js && node --check dist/notes-ui.js && node --check dist/pdf-reader.js && node --check dist/notes-generator.js && node --check dist/notes-worker.js"
+    "check": "node --check dist/app.js && node --check dist/engine.js && node --check dist/questions.js && node --check dist/notes-ui.js && node --check dist/pdf-reader.js && node --check dist/notes-generator.js && node --check dist/notes-worker.js && node --check dist/players.js && node --check dist/players-ui.js"
   }
 }
