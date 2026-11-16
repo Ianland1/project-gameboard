@@ -15,8 +15,8 @@ A STEM practice companion for a physical cyber pyramid game. The website provide
 - Free roll mode for your own game rules.
 - Animated D4-style triangular pyramid die with a three-sided base, cryptographically randomized rolls from 1 to 4, and recent-roll history. Each number is equally likely.
 - Session totals and progress saved locally when browser storage is available.
-- One to four editable player counters, starting at 0 with no board length or finish tile required. Select the player before rolling, then apply the latest result once or adjust positions manually.
-- Player counters save separately from Study Notes data. New session resets positions while retaining player names. A later roll replaces an unapplied result; the +/− controls or position field can correct any physical-board move. After counting a roll manually, choose Skip update so it is not added again.
+- One to four editable player counters, starting at 0 with no board length or finish tile required. Select the player before rolling; each new dice result automatically advances their position once and selects the next player, looping through the visible player order. Use manual controls for corrections.
+- Player counters save separately from Study Notes data. New session resets positions while retaining player names. Automatic movement and the next player are saved before the dice animation so refreshing cannot add the same move again. The +/− controls or position field can correct physical-board moves and special rules. Pending rolls from the previous manual mode are discarded rather than retroactively counted.
 - Responsive layout, keyboard controls, accessible dialogs, and reduced-motion support.
 
 ## Run locally

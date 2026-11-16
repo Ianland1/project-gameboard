@@ -125,6 +125,25 @@ export class PlayerTracker {
     return { playerId: player.id, name: player.name, from, to: player.position, value: roll.value };
   }
 
+  /** Automatically advance the selected player once for a new dice result. */
+  advanceRoll(id, value) {
+    if (!this.recordRoll(id, value)) return null;
+    return this.applyRoll();
+  }
+
+  nextPlayer() {
+    const index = this.#players.findIndex(player => player.id === this.#activeId);
+    this.#activeId = this.#players[(index + 1) % this.#players.length].id;
+    return this.activePlayer;
+  }
+
+  /** Complete one dice turn; duplicate results cannot move or skip a player. */
+  playTurn(id, value) {
+    const move = this.advanceRoll(id, value);
+    if (!move) return null;
+    return { ...move, nextPlayer: this.nextPlayer() };
+  }
+
   /** Discard the pending roll and retain its ID against replay. Return whether one existed. */
   clearPending() {
     if (!this.#pendingRoll) return false;

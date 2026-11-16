@@ -1,7 +1,7 @@
 import { Game } from './engine.js?v=pdf-notes-v1';
 import { LEVELS, SUBJECTS, QUESTIONS } from './questions.js?v=stem-v1';
-import { PlayerTracker } from './players.js?v=players-v1';
-import { createPlayerController } from './players-ui.js?v=players-v1';
+import { PlayerTracker } from './players.js?v=auto-players-v1';
+import { createPlayerController } from './players-ui.js?v=auto-players-v1';
 
 const $ = selector => document.querySelector(selector);
 const storageKey = 'pyra-companion-v1';
@@ -14,6 +14,9 @@ catch { game = new Game(); }
 let players;
 try { players = PlayerTracker.restore(JSON.parse(localStorage.getItem(playersStorageKey))); }
 catch { players = new PlayerTracker(); }
+// Old manual-mode pending rolls may already have been counted by hand.
+// Only new rolls advance counters automatically.
+players.clearPending();
 let playerController = null;
 let selected = null;
 let rolling = false;
@@ -226,8 +229,8 @@ async function roll() {
   if (result === null) return;
   const rollPlayer = players.activePlayer;
   const rollId = `roll-${globalThis.crypto?.randomUUID?.() || `${Date.now()}-${game.rolls}-${Math.random().toString(36).slice(2)}`}`;
-  players.recordRoll(rollId, result);
-  $('#players-message').textContent = `${rollPlayer.name} rolled ${result}. Apply it to their counter when you move the piece.`;
+  const move = players.playTurn(rollId, result);
+  $('#players-message').textContent = `${rollPlayer.name} moved ${result} ${result === 1 ? 'space' : 'spaces'} to space ${move.to}. Next: ${move.nextPlayer.name}.`;
   rolling = true;
   save(); // Consume the earned roll before animating, including across a refresh.
   render();
@@ -237,7 +240,7 @@ async function roll() {
   die.classList.remove('is-rolling');
   rolling = false;
   render();
-  announce(`${rollPlayer.name} rolled ${result}. Move ${result} ${result === 1 ? 'space' : 'spaces'} on your board, then apply the roll to their counter.`);
+  announce(`${rollPlayer.name} rolled ${result} and their counter is now on space ${move.to}. Move the real piece to match. ${move.nextPlayer.name} is next.`);
   if (matchMedia('(max-width: 600px)').matches) $('#dice-title').scrollIntoView({behavior:reduceMotion.matches ? 'instant' : 'smooth',block:'start'});
 }
 

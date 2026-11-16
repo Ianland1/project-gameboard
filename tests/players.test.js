@@ -218,3 +218,48 @@ test('invalid roll values and identifiers cannot replace a valid pending die', (
   for (const id of ['', ' ', null, 42, 'a'.repeat(129)]) assert.throws(() => tracker.recordRoll(id, 2));
   assert.deepEqual(tracker.pendingRoll, { id: 'valid', value: 2, playerId: 'player-1' });
 });
+
+
+test('automatic dice movement advances only the selected player once across reloads', () => {
+  const tracker = new PlayerTracker();
+  tracker.setPosition('player-1', 10);
+  const move = tracker.advanceRoll('automatic-1', 3);
+  assert.deepEqual(move, {playerId:'player-1',name:'Player 1',from:10,to:13,value:3});
+  assert.equal(tracker.pendingRoll, null);
+  tracker.setActive('player-2');
+  assert.equal(tracker.advanceRoll('automatic-1',3),null);
+  const restored = roundTrip(tracker);
+  assert.equal(restored.advanceRoll('automatic-1',3),null);
+  restored.advanceRoll('automatic-2',4);
+  restored.advanceRoll('automatic-3',2);
+  assert.equal(restored.players[0].position,13);
+  assert.equal(restored.players[1].position,6);
+  restored.resetPositions();
+  assert.equal(restored.advanceRoll('automatic-3',2),null);
+  assert.ok(restored.players.every(p=>p.position===0));
+});
+
+
+test('automatic turns cycle through four players and do not advance twice for a repeated roll', () => {
+  const tracker = new PlayerTracker();
+  tracker.addPlayer(); tracker.addPlayer();
+  const ids = tracker.players.map(p=>p.id);
+  for(let i=0;i<4;i++) {
+    const turn = tracker.playTurn(`turn-${i}`,i+1);
+    assert.equal(turn.playerId,ids[i]);
+    assert.equal(turn.nextPlayer.id,ids[(i+1)%4]);
+    assert.equal(tracker.playTurn(`turn-${i}`,i+1),null);
+    assert.equal(tracker.activeId,ids[(i+1)%4]);
+  }
+  assert.deepEqual(tracker.players.map(p=>p.position),[1,2,3,4]);
+  const restored = roundTrip(tracker);
+  assert.equal(restored.activeId,ids[0]);
+  assert.equal(restored.playTurn('turn-3',4),null);
+  assert.equal(restored.activeId,ids[0]);
+  restored.removePlayer(ids[1]);
+  const next=restored.playTurn('after-remove',2);
+  assert.equal(next.nextPlayer.id,ids[2]);
+  while(restored.players.length>1)restored.removePlayer(restored.players.at(-1).id);
+  const solo=restored.playTurn('solo-turn',3);
+  assert.equal(solo.playerId,solo.nextPlayer.id);
+});

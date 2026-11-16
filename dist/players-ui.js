@@ -10,8 +10,7 @@ export function createPlayerController({getTracker, onChange, isBusy, announce})
   }
   function commit() { sync(); onChange(); }
   function positionMessage(player) {
-    const pending = getTracker().pendingRoll;
-    return `${player.name} is on space ${player.position}.${pending?.playerId === player.id ? ' If you counted the roll manually, choose Skip update.' : ''}`;
+    return `${player.name} is on space ${player.position}.`;
   }
 
   function sync() {
@@ -47,15 +46,9 @@ export function createPlayerController({getTracker, onChange, isBusy, announce})
       }
     }
     $('#players-count').textContent = `${players.length} / 4 players`;
-    $('#players-active').textContent = `Rolling for ${tracker.activePlayer.name}`;
+    $('#players-active').textContent = `${busy ? 'Next up' : 'Rolling for'} ${tracker.activePlayer.name}`;
     $('#player-add').disabled = busy || !tracker.canAdd;
     $('#player-add').title = tracker.canAdd ? 'Add a player' : 'Maximum of four players';
-    const pending = tracker.pendingRoll;
-    const target = players.find(p => p.id === pending?.playerId);
-    $('#player-apply').disabled = busy || !pending || !target;
-    $('#player-apply').textContent = pending && target ? `Apply ${pending.value} to ${target.name}` : 'Apply dice roll';
-    $('#player-skip').hidden = !pending;
-    $('#player-skip').disabled = busy;
   }
 
   $('#player-add').addEventListener('click', () => {
@@ -116,17 +109,6 @@ export function createPlayerController({getTracker, onChange, isBusy, announce})
       commit();
       message(`${player.name} removed.`);
     }
-  });
-  $('#player-apply').addEventListener('click', () => {
-    if (isBusy()) return;
-    const move = getTracker().applyRoll();
-    if (!move) return;
-    commit();
-    message(`${move.name} moved ${move.value} ${move.value === 1 ? 'space' : 'spaces'} to space ${move.to}.`);
-  });
-  $('#player-skip').addEventListener('click', () => {
-    if (isBusy()) return;
-    if (getTracker().clearPending()) { commit(); message('Counter update skipped. Positions are unchanged.'); }
   });
   sync();
   return {sync,message};
